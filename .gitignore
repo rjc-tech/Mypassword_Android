@@ -30,6 +30,7 @@ proguard/
 project.properties
 lint.xml
 misc.xml
+workspace.xml
 
 *.iml
 *.ipr
