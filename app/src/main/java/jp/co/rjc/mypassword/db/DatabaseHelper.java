@@ -34,22 +34,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
     }
 
-    /**
-     *
-     * @param sqLiteDatabase
-     * @param siteName
-     * @param accountId
-     * @param accountPassword
-     * @param siteUrl
-     * @param notes
-     * @return
-     */
+    // 新規登録
     public static int insert(SQLiteDatabase sqLiteDatabase,
-                              String siteName,
-                              String accountId,
-                              String accountPassword,
-                              String siteUrl,
-                              String notes) {
+                             String siteName,
+                             String accountId,
+                             String accountPassword,
+                             String siteUrl,
+                             String notes) {
         ContentValues values = new ContentValues();
         values.put("site_name", siteName);
         values.put("account_id", accountId);
@@ -69,12 +60,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // 更新
     public static int update(SQLiteDatabase sqLiteDatabase,
-                              int id,
-                              String siteName,
-                              String accountId,
-                              String accountPassword,
-                              String siteUrl,
-                              String notes) {
+                             int id,
+                             String siteName,
+                             String accountId,
+                             String accountPassword,
+                             String siteUrl,
+                             String notes) {
         ContentValues values = new ContentValues();
         values.put("site_name", siteName);
         values.put("account_id", accountId);
@@ -111,11 +102,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    // 検索（１件）
+    // 検索（１件） TODO 戻り値としてCursorを返すのはどうなのか…
     public static Cursor selectOne(SQLiteDatabase sqLiteDatabase, int id){
         String[] cols = {"id","site_name","account_id","account_password","site_url","notes","last_access_datetime"};
         String selection = "id = ?";
         String[] selectionArgs = {String.valueOf(id)};
+        String groupBy = null;
+        String having = null;
+        String orderBy = null;
+        try{
+            return sqLiteDatabase.query("site_info", cols, selection, selectionArgs, groupBy, having, orderBy);
+        }finally{
+            sqLiteDatabase.close();
+        }
+    }
+
+    // 検索
+    public static Cursor select(SQLiteDatabase sqLiteDatabase, int id){
+        String[] cols = {"id","site_name","account_id","account_password","site_url","notes","last_access_datetime"};
+        String selection = null;
+        String[] selectionArgs = null;
         String groupBy = null;
         String having = null;
         String orderBy = null;
