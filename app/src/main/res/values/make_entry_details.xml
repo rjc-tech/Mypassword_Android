@@ -6,4 +6,8 @@
     <string name="passward">パスワード</string>
     <string name="url">URL</string>
     <string name="bikou">備考</string>
+    <string name="LinearLayout1">LinearLayout1</string>
+    <string name="LinearLayout2">LinearLayout2</string>
+    <string name="LinearLayout3">LinearLayout3</string>
+    <string name="LinearLayout4">LinearLayout4</string>
 </resources>
