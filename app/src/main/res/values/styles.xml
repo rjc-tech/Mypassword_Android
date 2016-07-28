@@ -8,4 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SiteDetailTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:layout_width">@dimen/site_detail_label_title_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@drawable/radius_title</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:radius">1.0dp</item>
+    </style>
+
 </resources>
