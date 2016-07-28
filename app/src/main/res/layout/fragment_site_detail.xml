@@ -1,0 +1,205 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/SiteDetailTitle"
+            android:text="@string/label_site_name"/>
+
+        <TextView
+            android:id="@+id/edit_site_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:hint="site title"
+            android:textSize="18dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/SiteDetailTitle"
+                    android:text="@string/label_login_id"/>
+
+                <TextView
+                    android:id="@+id/edit_login_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:hint="account name"
+                    android:textSize="18dp"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btn_copy_login_id"
+                android:layout_width="35dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginLeft="10dp"
+                android:background="@color/light_gray"
+                android:src="@android:drawable/ic_input_get"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/edit_password_title"
+                        style="@style/SiteDetailTitle"
+                        android:text="@string/label_password"/>
+
+                    <TextView
+                        android:id="@+id/edit_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/edit_password_title"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:hint="account pass"
+                        android:inputType="textPassword"
+                        android:textSize="18dp"/>
+
+                    <Button
+                        android:id="@+id/btn_reveal_password"
+                        android:layout_width="35dp"
+                        android:layout_height="45dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:background="@android:drawable/ic_menu_view"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btn_copy_password"
+                android:layout_width="35dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginLeft="10dp"
+                android:background="@color/light_gray"
+                android:src="@android:drawable/ic_input_get"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/SiteDetailTitle"
+                    android:text="@string/label_url"/>
+
+                <TextView
+                    android:id="@+id/edit_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:hint="http(s)://www・・・"
+                    android:textSize="18dp"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btn_browse"
+                android:layout_width="35dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginLeft="10dp"
+                android:background="@color/light_gray"
+                android:src="@android:drawable/ic_menu_set_as"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_gray"/>
+
+        <TextView
+            style="@style/SiteDetailTitle"
+            android:text="@string/label_notes"/>
+
+        <TextView
+            android:id="@+id/edit_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:hint="memo"
+            android:inputType="textMultiLine"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+
+</ScrollView>
