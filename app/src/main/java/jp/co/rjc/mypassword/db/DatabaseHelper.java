@@ -5,12 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
-import android.text.TextUtils;
 
 import java.sql.Timestamp;
-
-import jp.co.rjc.mypassword.common.Globals;
 
 /**
  * Created by m_doi on 2016/06/08.
