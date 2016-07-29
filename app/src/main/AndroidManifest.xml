@@ -10,6 +10,7 @@
         android:theme="@style/Theme.AppCompat.Light">
         <activity
             android:name=".ui.activity.InputPinActivity"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -18,7 +19,7 @@
         </activity>
         <activity
             android:name=".ui.activity.SiteListActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
         </activity>
         <activity
             android:name=".ui.activity.SiteDetailActivity"

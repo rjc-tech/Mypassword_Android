@@ -5,5 +5,4 @@ package jp.co.rjc.mypassword.provider;
  */
 public class LoginInfos {
 	public static final String ID = "_id";
-	public static final String PIN = "site_name";
 }
