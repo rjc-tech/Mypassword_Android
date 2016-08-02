@@ -1,6 +1,7 @@
 package jp.co.rjc.mypassword.ui.fragment;
 
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -290,8 +291,15 @@ public class SiteDetailFragment extends Fragment {
             mBrowseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.getText().toString()));
-                    startActivity(intent);
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.getText().toString()));
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        new AlertDialog.Builder(getActivity())
+                            .setMessage("URLが無効です")
+                            .setPositiveButton(R.string.dialog_label_ok, null)
+                            .show();
+                    }
                 }
             });
         } else {
