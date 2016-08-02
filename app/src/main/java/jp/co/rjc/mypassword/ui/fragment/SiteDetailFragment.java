@@ -205,7 +205,7 @@ public class SiteDetailFragment extends Fragment {
      * 入力値チェックを行います。
      */
     private boolean validation(String item,String message) {
-        if(item.trim().isEmpty()){
+        if(trimSpace(item).isEmpty()){
             new AlertDialog.Builder(getActivity())
                     .setMessage(message + "を入力してください")
                     .setPositiveButton(R.string.dialog_label_ok, null)
@@ -213,6 +213,28 @@ public class SiteDetailFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 全角・半角スペースのトリムを行います。
+     */
+    public String trimSpace(String str) {
+        if(str == null){
+            return null;
+        }
+
+        char[] value = str.toCharArray();
+        int len = value.length;
+        int i = 0;
+        char[] valList = value;
+
+        while ((i < len) && (valList[i] <= ' ' || valList[i] == '　')) {
+            i++;
+        }
+        while ((i < len) && (valList[len - 1] <= ' ' || valList[len - 1] == '　')) {
+            len--;
+        }
+        return ((i > 0) || (len < value.length)) ? str.substring(i,len):str;
     }
 
     /**
