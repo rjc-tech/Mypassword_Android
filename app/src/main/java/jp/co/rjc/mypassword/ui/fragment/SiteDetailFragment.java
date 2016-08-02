@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -115,6 +116,10 @@ public class SiteDetailFragment extends Fragment {
             mEditCompleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 入力チェック
+                    if(!validation(mEditSiteName.getText().toString(),getResources().getString(R.string.label_site_name))){
+                        return;
+                    }
                     int result = DatabaseHelper.insert(
                             mDb.getWritableDatabase(),
                             mAccountId,
@@ -145,6 +150,10 @@ public class SiteDetailFragment extends Fragment {
             mEditCompleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 入力チェック
+                    if(!validation(mEditSiteName.getText().toString(),getResources().getString(R.string.label_site_name))){
+                        return;
+                    }
                     int result = DatabaseHelper.update(
                             mDb.getWritableDatabase(),
                             mSiteId,
@@ -190,6 +199,20 @@ public class SiteDetailFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * 入力値チェックを行います。
+     */
+    private boolean validation(String item,String message) {
+        if(item.trim().isEmpty()){
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(message + "を入力してください")
+                    .setPositiveButton(R.string.dialog_label_ok, null)
+                    .show();
+            return false;
+        }
+        return true;
     }
 
     /**
