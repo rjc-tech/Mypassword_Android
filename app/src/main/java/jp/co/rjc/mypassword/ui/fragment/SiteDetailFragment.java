@@ -296,7 +296,7 @@ public class SiteDetailFragment extends Fragment {
                         startActivity(intent);
                     } catch (ActivityNotFoundException e) {
                         new AlertDialog.Builder(getActivity())
-                            .setMessage("URLが無効です")
+                            .setMessage("URLが無効、または利用可能なブラウザがインストールされていません")
                             .setPositiveButton(R.string.dialog_label_ok, null)
                             .show();
                     }
