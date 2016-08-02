@@ -117,7 +117,7 @@ public class SiteDetailFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // 入力チェック
-                    if(!validation(mEditSiteName.getText().toString(),getResources().getString(R.string.label_site_name))){
+                    if (!validation(mEditSiteName.getText().toString(), getResources().getString(R.string.label_site_name))) {
                         return;
                     }
                     int result = DatabaseHelper.insert(
@@ -151,7 +151,7 @@ public class SiteDetailFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // 入力チェック
-                    if(!validation(mEditSiteName.getText().toString(),getResources().getString(R.string.label_site_name))){
+                    if (!validation(mEditSiteName.getText().toString(), getResources().getString(R.string.label_site_name))) {
                         return;
                     }
                     int result = DatabaseHelper.update(
@@ -204,8 +204,8 @@ public class SiteDetailFragment extends Fragment {
     /**
      * 入力値チェックを行います。
      */
-    private boolean validation(String item,String message) {
-        if(trimSpace(item).isEmpty()){
+    private boolean validation(String item, String message) {
+        if (trimSpace(item).isEmpty()) {
             new AlertDialog.Builder(getActivity())
                     .setMessage(message + "を入力してください")
                     .setPositiveButton(R.string.dialog_label_ok, null)
@@ -219,7 +219,7 @@ public class SiteDetailFragment extends Fragment {
      * 全角・半角スペースのトリムを行います。
      */
     public String trimSpace(String str) {
-        if(str == null){
+        if (str == null) {
             return null;
         }
 
@@ -234,7 +234,7 @@ public class SiteDetailFragment extends Fragment {
         while ((i < len) && (valList[len - 1] <= ' ' || valList[len - 1] == '　')) {
             len--;
         }
-        return ((i > 0) || (len < value.length)) ? str.substring(i,len):str;
+        return ((i > 0) || (len < value.length)) ? str.substring(i, len) : str;
     }
 
     /**
@@ -290,6 +290,8 @@ public class SiteDetailFragment extends Fragment {
             mBrowseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // ページ遷移時に最終アクセス日時を更新
+                    DatabaseHelper.updateLastAccessDatetime(mDb.getWritableDatabase(), mSiteId);
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.getText().toString()));
                     startActivity(intent);
                 }

@@ -161,6 +161,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return ret;
 	}
 
+	// 最終アクセス日時更新
+	public static int updateLastAccessDatetime(SQLiteDatabase sqLiteDatabase,int id) {
+		ContentValues values = new ContentValues();
+		values.put("last_access_datetime", new Timestamp(System.currentTimeMillis()).getTime());
+
+		String whereClause = "_id = ?";
+		String whereArgs[] = new String[1];
+		whereArgs[0] = Integer.toString(id);
+
+		int ret;
+		try {
+			ret = sqLiteDatabase.update("site_info", values, whereClause, whereArgs);
+		} finally {
+			sqLiteDatabase.close();
+		}
+		return ret;
+	}
+
 	// 削除
 	public static int delete(SQLiteDatabase sqLiteDatabase, int id) {
 		String whereClause = "_id = ?";
@@ -183,7 +201,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String[] selectionArgs = {String.valueOf(accountId)};
 		String groupBy = null;
 		String having = null;
-		String orderBy = null;
+		String orderBy = " last_access_datetime desc ";
 		return sqLiteDatabase.query("site_info", cols, selection, selectionArgs, groupBy, having, orderBy);
 	}
 
