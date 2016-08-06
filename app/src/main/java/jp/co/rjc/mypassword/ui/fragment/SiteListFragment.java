@@ -12,20 +12,31 @@ import android.widget.TextView;
 
 import jp.co.rjc.mypassword.R;
 import jp.co.rjc.mypassword.common.Globals;
-import jp.co.rjc.mypassword.db.DatabaseHelper;
-import jp.co.rjc.mypassword.provider.Sites;
+import jp.co.rjc.mypassword.dao.SiteDao;
+import jp.co.rjc.mypassword.provider.MypasswordDatabase;
 import jp.co.rjc.mypassword.ui.activity.SiteDetailActivity;
 import jp.co.rjc.mypassword.ui.adapter.SiteListAdapter;
 
 /**
- * 一覧画面表示のフラグメントです。
+ * サイトリストのUIを提供します.
  */
-public class SiteListFragment extends ListFragment {
+public class SiteListFragment extends ListFragment implements MypasswordDatabase.BaseColumns {
 
+    /**
+     * アカウントID.
+     */
     private int mAccountId;
-    private DatabaseHelper mDb;
 
+    /**
+     * サイト情報DBアクセスオブジェクト.
+     */
+    private SiteDao mSiteDao;
+
+    /**
+     * 未登録メッセージ.
+     */
     private TextView mEmptyMessage;
+
     private ListView mSiteListView;
     private SiteListAdapter mSiteListAdapter;
 
@@ -49,7 +60,7 @@ public class SiteListFragment extends ListFragment {
             }
         });
         mSiteListView = (ListView) view.findViewById(android.R.id.list);
-        mDb = new DatabaseHelper(getActivity().getApplicationContext());
+        mSiteDao = new SiteDao(getActivity().getApplicationContext());
         return view;
     }
 
@@ -70,10 +81,10 @@ public class SiteListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        final Cursor c = (Cursor) mSiteListAdapter.getItem(position);
+        final Cursor cursor = (Cursor) mSiteListAdapter.getItem(position);
         Intent intent = new Intent(getActivity(), SiteDetailActivity.class);
         intent.putExtra(Globals.INTENT_KEY_ACCOUNT_ID, mAccountId);
-        intent.putExtra(Globals.INTENT_KEY_SITE_ID, Integer.valueOf(c.getInt(c.getColumnIndex(Sites.ID))));
+        intent.putExtra(Globals.INTENT_KEY_SITE_ID, Integer.valueOf(cursor.getInt(cursor.getColumnIndex(_ID))));
         intent.putExtra(Globals.INTENT_KEY_EDIT_STATUS, SiteDetailActivity.SITE_EDIT_STATUS_READ);
         startActivity(intent);
     }
@@ -83,7 +94,7 @@ public class SiteListFragment extends ListFragment {
      */
     private void updateSiteList() {
         mSiteListView.setAdapter(null);
-        mSiteListAdapter = new SiteListAdapter(getActivity(), DatabaseHelper.select(mDb.getReadableDatabase(), mAccountId));
+        mSiteListAdapter = new SiteListAdapter(getActivity(), mSiteDao.select(mAccountId));
 
         if (mSiteListAdapter.getCount() > 0) {
             mSiteListView.setAdapter(mSiteListAdapter);
