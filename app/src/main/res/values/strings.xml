@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MyPassword</string>
 
+    <string name="secret_key">_rjc_my_password</string>
+
     <string name="btn_label_edit_pin">PIN変更</string>
     <string name="btn_label_cancel">キャンセル</string>
     <string name="btn_label_new">新規作成</string>

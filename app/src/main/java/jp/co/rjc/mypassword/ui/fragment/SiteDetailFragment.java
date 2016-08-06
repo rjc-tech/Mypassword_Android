@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,20 +24,24 @@ import android.widget.TextView;
 
 import jp.co.rjc.mypassword.R;
 import jp.co.rjc.mypassword.common.Globals;
-import jp.co.rjc.mypassword.db.DatabaseHelper;
-import jp.co.rjc.mypassword.provider.SiteInfos;
+import jp.co.rjc.mypassword.dao.SiteDao;
 import jp.co.rjc.mypassword.ui.activity.SiteDetailActivity;
 import jp.co.rjc.mypassword.ui.activity.SiteListActivity;
 import jp.co.rjc.mypassword.util.ActivityUtils;
+import jp.co.rjc.mypassword.util.ConvertUtils;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
+/**
+ * サイト詳細のUIを提供します.
+ */
 public class SiteDetailFragment extends Fragment {
 
+    private Context mCcontext;
     private int mAccountId;
     private int mEditStatus;
     private int mSiteId;
-    DatabaseHelper mDb;
+    private SiteDao mSiteDao;
 
     private EditText mEditSiteName;
     private EditText mEditLoginId;
@@ -65,7 +70,8 @@ public class SiteDetailFragment extends Fragment {
         mAccountId = getActivity().getIntent().getIntExtra(Globals.INTENT_KEY_ACCOUNT_ID, -1);
         mEditStatus = intent.getIntExtra(Globals.INTENT_KEY_EDIT_STATUS, SiteDetailActivity.SITE_EDIT_STATUS_READ);
         mSiteId = intent.getIntExtra(Globals.INTENT_KEY_SITE_ID, -1);
-        mDb = new DatabaseHelper(getActivity().getApplicationContext());
+        mCcontext = getActivity().getApplicationContext();
+        mSiteDao = new SiteDao(mCcontext);
     }
 
     @Nullable
@@ -121,8 +127,7 @@ public class SiteDetailFragment extends Fragment {
                     if (!validation(mEditSiteName.getText().toString(), getResources().getString(R.string.label_site_name))) {
                         return;
                     }
-                    int result = DatabaseHelper.insert(
-                            mDb.getWritableDatabase(),
+                    int result = mSiteDao.insert(
                             mAccountId,
                             mEditSiteName.getText().toString(),
                             mEditLoginId.getText().toString(),
@@ -132,44 +137,49 @@ public class SiteDetailFragment extends Fragment {
                     );
                     if (result > 0) {
                         ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_success_create));
+                        goSiteList();
                     }
-                    goSiteList();
                 }
             });
 
         } else if (SiteDetailActivity.SITE_EDIT_STATUS_EDIT == mEditStatus) {
-            Cursor c = DatabaseHelper.selectOne(mDb.getReadableDatabase(), mSiteId);
-            if (c.moveToFirst()) {
-                mEditSiteName.setText(c.getString(c.getColumnIndex(SiteInfos.SITE_NAME)));
-                mEditLoginId.setText(c.getString(c.getColumnIndex(SiteInfos.LOGIN_ID)));
-                mEditLoginPass.setText(c.getString(c.getColumnIndex(SiteInfos.LOGIN_PASSWORD)));
-
-                mEditUrl.setText(c.getString(c.getColumnIndex(SiteInfos.SITE_URL)));
-                mEditNotes.setText(c.getString(c.getColumnIndex(SiteInfos.NOTES)));
-            }
-            mEditCompleteBtn.setText(getResources().getString(R.string.btn_label_update));
-            mEditCompleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 入力チェック
-                    if (!validation(mEditSiteName.getText().toString(), getResources().getString(R.string.label_site_name))) {
-                        return;
-                    }
-                    int result = DatabaseHelper.update(
-                            mDb.getWritableDatabase(),
-                            mSiteId,
-                            mEditSiteName.getText().toString(),
-                            mEditLoginId.getText().toString(),
-                            mEditLoginPass.getText().toString(),
-                            mEditUrl.getText().toString(),
-                            mEditNotes.getText().toString()
-                    );
-                    if (result > 0) {
-                        ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_success_update));
-                    }
-                    goSiteList();
+            Cursor cursor = null;
+            try {
+                cursor = mSiteDao.selectOne(mSiteId);
+                if (cursor.moveToFirst()) {
+                    mEditSiteName.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.SITE_NAME)));
+                    mEditLoginId.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.LOGIN_ID)));
+                    mEditLoginPass.setText(ConvertUtils.decrypt(mCcontext, cursor.getString(cursor.getColumnIndex(mSiteDao.LOGIN_PASSWORD))));
+                    mEditUrl.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.SITE_URL)));
+                    mEditNotes.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.NOTES)));
                 }
-            });
+                mEditCompleteBtn.setText(getResources().getString(R.string.btn_label_update));
+                mEditCompleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 入力チェック
+                        if (!validation(mEditSiteName.getText().toString(), getResources().getString(R.string.label_site_name))) {
+                            return;
+                        }
+                        int result = mSiteDao.update(
+                                mSiteId,
+                                mEditSiteName.getText().toString(),
+                                mEditLoginId.getText().toString(),
+                                mEditLoginPass.getText().toString(),
+                                mEditUrl.getText().toString(),
+                                mEditNotes.getText().toString()
+                        );
+                        if (result > 0) {
+                            ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_success_update));
+                            goSiteList();
+                        }
+                    }
+                });
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
         }
         // パスワード表示切り替えボタンを初期化
         mEditRevealPassBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -243,70 +253,77 @@ public class SiteDetailFragment extends Fragment {
      */
     private void initReadLayout() {
 
-        Cursor c = DatabaseHelper.selectOne(mDb.getReadableDatabase(), mSiteId);
-        if (c.moveToFirst()) {
-            mSiteName.setText(c.getString(c.getColumnIndex(SiteInfos.SITE_NAME)));
-            mLoginId.setText(c.getString(c.getColumnIndex(SiteInfos.LOGIN_ID)));
-            mLoginPass.setText(c.getString(c.getColumnIndex(SiteInfos.LOGIN_PASSWORD)));
-            mUrl.setText(c.getString(c.getColumnIndex(SiteInfos.SITE_URL)));
-            mNotes.setText(c.getString(c.getColumnIndex(SiteInfos.NOTES)));
+        Cursor cursor = null;
+        try {
+            cursor = mSiteDao.selectOne(mSiteId);
+            if (cursor.moveToFirst()) {
+                mSiteName.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.SITE_NAME)));
+                mLoginId.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.LOGIN_ID)));
+                mLoginPass.setText(ConvertUtils.decrypt(mCcontext, cursor.getString(cursor.getColumnIndex(mSiteDao.LOGIN_PASSWORD))));
+                mUrl.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.SITE_URL)));
+                mNotes.setText(cursor.getString(cursor.getColumnIndex(mSiteDao.NOTES)));
 
-            // ログインIDコピーボタンを初期化
+                // ログインIDコピーボタンを初期化
 
-            mCopyIdBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ClipData cd = new ClipData(new ClipDescription("text_data", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}), new ClipData.Item(mLoginId.getText()));
-                    ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
-                    cm.setPrimaryClip(cd);
-                    ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_copy_clipboard_id));
-                }
-            });
-
-            // ログインパスワード表示切り替えボタンを初期化
-            mRevealPassBtn.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        mLoginPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        mLoginPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                mCopyIdBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipData cd = new ClipData(new ClipDescription("text_data", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}), new ClipData.Item(mLoginId.getText()));
+                        ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+                        cm.setPrimaryClip(cd);
+                        ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_copy_clipboard_id));
                     }
-                    return false;
-                }
-            });
+                });
 
-            // ログインパスワードコピーボタンを初期化
-            mCopyPassBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ClipData cd = new ClipData(new ClipDescription("text_data", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}), new ClipData.Item(mLoginPass.getText()));
-                    ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
-                    cm.setPrimaryClip(cd);
-                    ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_copy_clipboard_pass));
-                }
-            });
-
-            // ブラウザ連携ボタンを初期化
-            mBrowseBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.getText().toString()));
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                        new AlertDialog.Builder(getActivity())
-                                .setMessage("URLが無効、または利用可能なブラウザがインストールされていません")
-                                .setPositiveButton(R.string.dialog_label_ok, null)
-                                .show();
-                        return;
+                // ログインパスワード表示切り替えボタンを初期化
+                mRevealPassBtn.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            mLoginPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                            mLoginPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        }
+                        return false;
                     }
-                    // ページ遷移時に最終アクセス日時を更新
-                    DatabaseHelper.updateLastAccessDatetime(mDb.getWritableDatabase(), mSiteId);
-                }
-            });
-        } else {
-            goSiteList();
+                });
+
+                // ログインパスワードコピーボタンを初期化
+                mCopyPassBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipData cd = new ClipData(new ClipDescription("text_data", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}), new ClipData.Item(mLoginPass.getText()));
+                        ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
+                        cm.setPrimaryClip(cd);
+                        ActivityUtils.getInstance(getActivity()).displayCenterToastShort(getResources().getString(R.string.toast_copy_clipboard_pass));
+                    }
+                });
+
+                // ブラウザ連携ボタンを初期化
+                mBrowseBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.getText().toString()));
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setMessage("URLが無効、または利用可能なブラウザがインストールされていません")
+                                    .setPositiveButton(R.string.dialog_label_ok, null)
+                                    .show();
+                            return;
+                        }
+                        // ページ遷移時に最終アクセス日時を更新
+                        mSiteDao.updateLastAccessDatetime(mSiteId);
+                    }
+                });
+            } else {
+                goSiteList();
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 

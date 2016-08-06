@@ -14,6 +14,11 @@ public final class Globals {
 	private Globals() {
 	}
 
+	/**
+	 * 汎用エラーコードです.
+	 */
+	public static final int ERROR_CODE = -1;
+
 	// ////////////////////////////////////////////////////////////////////////
 	// PIN入力ステータス情報
 
