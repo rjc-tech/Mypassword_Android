@@ -152,8 +152,15 @@ public class InputPinActivity extends AppCompatActivity {
                 resetPin();
             }
         });
-        initInputPinStatus(getIntent().getIntExtra(Globals.INTENT_KEY_INPUT_STATUS, SharedPreferencesUtils.getPinInputStatus(getApplicationContext())));
+        mInputPinStatus = getIntent().getIntExtra(Globals.INTENT_KEY_INPUT_STATUS, SharedPreferencesUtils.getPinInputStatus(getApplicationContext()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initInputPinStatus(mInputPinStatus);
         initCancelBtnView();
+        resetPin();
     }
 
     //////////////////////////////////////////////////////////////////
@@ -383,9 +390,6 @@ public class InputPinActivity extends AppCompatActivity {
                         resetPin();
 
                     } else if (INPUT_PIN_STATUS_REGISTERED == mInputPinStatus) {
-                        initInputPinStatus(mInputPinStatus);
-                        initCancelBtnView();
-                        resetPin();
                         ActivityUtils.getInstance(this).displayCenterToastShort(getResources().getString(R.string.toast_success_login));
                         goSiteList(mTemporaryId);
                     }
