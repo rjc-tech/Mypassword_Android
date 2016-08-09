@@ -35,4 +35,9 @@
     <string name="label_password">パスワード</string>
     <string name="label_url">URL</string>
     <string name="label_notes">備考</string>
+
+    <string name="about_label_info">著作権情報</string>
+    <string name="about_label_title_appcompat">appcompat-v7</string>
+    <string name="about_label_title_constraint">constraint-layout</string>
+
 </resources>
