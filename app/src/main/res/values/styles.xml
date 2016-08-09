@@ -22,4 +22,12 @@
         <item name="android:radius">1.0dp</item>
     </style>
 
+    <style name="about_list_style">
+        <item name="android:layout_height">44dp</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
 </resources>

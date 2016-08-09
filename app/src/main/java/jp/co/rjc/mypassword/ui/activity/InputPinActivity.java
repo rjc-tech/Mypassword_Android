@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +73,11 @@ public class InputPinActivity extends AppCompatActivity {
     デバッグ用PIN変更メニューボタン
 	MenuItem mEditPinBtn;
 	*/
+
+    /**
+     * About画面メニューボタン.
+     */
+    public MenuItem mEditAboutBtn;
 
     /**
      * PIN入力メッセージ.
@@ -164,6 +171,23 @@ public class InputPinActivity extends AppCompatActivity {
     }
 
     //////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+		mEditAboutBtn = menu.add(getResources().getString(R.string.about_label_info));
+        mEditAboutBtn.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        mEditAboutBtn.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(InputPinActivity.this, AboutActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+	}
 
 	/*
     デバッグ用PIN変更メニューボタン

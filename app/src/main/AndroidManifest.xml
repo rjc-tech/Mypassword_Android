@@ -25,6 +25,10 @@
             android:name=".ui.activity.SiteDetailActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:launchMode="singleTask">
+        </activity>
     </application>
 
 </manifest>
