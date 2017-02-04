@@ -174,8 +174,9 @@ public class InputPinActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		mEditAboutBtn = menu.add(getResources().getString(R.string.about_label_info));
+		mEditAboutBtn = menu.add("Action Button");
         mEditAboutBtn.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        mEditAboutBtn.setIcon(android.R.drawable.ic_menu_info_details);
 
         mEditAboutBtn.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

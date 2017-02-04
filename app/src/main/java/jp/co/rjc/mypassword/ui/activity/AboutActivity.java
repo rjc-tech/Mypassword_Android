@@ -1,7 +1,10 @@
 package jp.co.rjc.mypassword.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import jp.co.rjc.mypassword.R;
 
@@ -10,13 +13,32 @@ import jp.co.rjc.mypassword.R;
  */
 public class AboutActivity extends AppCompatActivity {
 
+    protected Button mOSSBtn;
+    protected Button mTopBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // タイトル変更
-        setTitle(getResources().getString(R.string.about_label_info));
 
         setContentView(R.layout.activity_about);
+        mOSSBtn = (Button) findViewById(R.id.btn_oss);
+        mOSSBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AboutActivity.this, LicensesActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mTopBtn = (Button) findViewById(R.id.btn_top);
+        mTopBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AboutActivity.this, InputPinActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override
