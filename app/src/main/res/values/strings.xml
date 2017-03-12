@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">MyPassword</string>
+
+    <string name="secret_key">_rjc_my_password</string>
+
+    <string name="btn_label_edit_pin">PIN変更</string>
+    <string name="btn_label_cancel">キャンセル</string>
+    <string name="btn_label_new">新規作成</string>
+    <string name="btn_label_copy">コピー</string>
+    <string name="btn_label_create">登録</string>
+    <string name="btn_label_update">更新</string>
+
+    <string name="msg_request_input_pin_register">登録するPINコードを入力してください</string>
+    <string name="msg_request_input_pin">PINコードを入力してください</string>
+    <string name="msg_request_input_pin_old">旧PINコードを入力してください</string>
+    <string name="msg_request_input_pin_new">新PINコードを入力してください</string>
+    <string name="msg_request_input_pin_reclaim">もう一度PINコードを入力してください</string>
+    <string name="msg_request_create_new_site">サイトが登録されていません。新規作成ボタンから登録してください</string>
+    <string name="msg_error_invalid_pin">PINコードが違います。\n再入力してください</string>
+    <string name="msg_error_invalid_pin_different">1,2回目の入力内容が一致しません。</string>
+
+    <string name="toast_success_pin_register">PINコード登録成功</string>
+    <string name="toast_success_login">ログイン成功</string>
+    <string name="toast_success_create">登録成功</string>
+    <string name="toast_success_update">更新成功</string>
+    <string name="toast_copy_clipboard_id">ログインIDをクリップボードに保存しました</string>
+    <string name="toast_copy_clipboard_pass">ログインパスワードをクリップボードに保存しました</string>
+
+    <string name="dialog_site_delete">表示中のサイト情報を削除します</string>
+    <string name="dialog_label_ok">OK</string>
+    <string name="dialog_label_cancel">キャンセル</string>
+
+    <string name="label_site_name">サイト名</string>
+    <string name="label_login_id">ログインID</string>
+    <string name="label_password">パスワード</string>
+    <string name="label_url">URL</string>
+    <string name="label_notes">備考</string>
+
+    <string name="label_about">このアプリについて</string>
+    <string name="label_licenses">OSSライセンス</string>
+
+</resources>
